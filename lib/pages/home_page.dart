@@ -6,11 +6,14 @@ import 'package:todoapp/util/my_drawer.dart';
 import 'package:todoapp/util/todo_tile.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../util/theme_manger.dart';
+
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_element
 // ignore_for_file: sort_child_properties_last
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.themeManager});
+  final ThemeManager themeManager;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -82,23 +85,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text("TO DO"),
-        backgroundColor: Colors.yellowAccent,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         // leading: Icon(Icons.menu),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: createnewTask,
-        backgroundColor: Colors.yellow,
+        backgroundColor: theme.floatingActionButtonTheme.backgroundColor,
         child: Icon(
           Icons.add,
           color: Colors.black,
         ),
       ),
-      drawer: MyDrawer(phrasesManager: savedPhrasesManager),
+      drawer: MyDrawer(
+        phrasesManager: savedPhrasesManager,
+        themeManager: widget.themeManager,
+      ),
       body: ListView.builder(
         itemCount: db.toDoList.length,
         itemBuilder: (context, index) {

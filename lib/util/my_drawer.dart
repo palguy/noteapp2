@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:todoapp/util/theme_manger.dart';
 import '../data/saved_phrases_manager.dart';
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_element
 // ignore_for_file: sort_child_properties_last
 
 class MyDrawer extends StatelessWidget {
   final SavedPhrasesManager phrasesManager;
+  final ThemeManager themeManager;
 
-  const MyDrawer({super.key, required this.phrasesManager});
+  const MyDrawer({
+    super.key,
+    required this.themeManager,
+    required this.phrasesManager,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final controller = TextEditingController();
 
     return Drawer(
@@ -19,18 +26,26 @@ class MyDrawer extends StatelessWidget {
           return ListView(
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(color: Colors.yellow),
-                child: Icon(Icons.favorite, size: 48),
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
+                ),
+                child: const Icon(Icons.favorite, size: 48),
               ),
-              ListTile(
-                leading: Icon(Icons.home),
-                title: Text('H O M E'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/homepage');
-                },
+              SwitchListTile(
+                title: Text("الوضع الليلي"),
+                value: themeManager.isDarkMode,
+                onChanged: (_) => themeManager.toggleTheme(),
+                secondary: Icon(Icons.dark_mode),
               ),
+              // ListTile(
+              //   leading: Icon(Icons.home),
+              //   title: Text('H O M E'),
+              //   onTap: () {
+              //     Navigator.pop(context);
+              //     Navigator.pushNamed(context, '/homepage');
+              //   },
+              // ),
               ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('SITTING'),
