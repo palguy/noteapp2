@@ -83,6 +83,33 @@ class _HomePageState extends State<HomePage> {
     db.updateDatabase();
   }
 
+  void editTask(int index) {
+    _controller.text = db.toDoList[index][0]; // ضع النص الحالي في TextField
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          phrasesManager: savedPhrasesManager,
+          myController: _controller,
+          onSave: () {
+            if (_controller.text.trim().isEmpty) return;
+            setState(() {
+              db.toDoList[index][0] = _controller.text.trim();
+              _controller.clear();
+              Navigator.pop(context);
+            });
+            db.updateDatabase();
+          },
+          onCancel: () {
+            _controller.clear();
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -110,6 +137,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: db.toDoList.length,
         itemBuilder: (context, index) {
           return ToDoTile(
+            onEdit: () => editTask(index),
             taskName: db.toDoList[index][0],
             deleteFunction: (context) => deletTask(index),
             taskCompleted: db.toDoList[index][1],
